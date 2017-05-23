@@ -1,0 +1,34 @@
+extends layout
+
+block content
+    br
+    br
+    br
+    h1
+        | Arbol de procesos
+    div#using_json
+
+
+    script(type='text/javascript').
+
+        var socket = io.connect('http://localhost:3001');
+
+        socket.on('pusharbol', function (data) {
+
+            var jsondata = JSON.parse(data);
+
+            $('#using_json').jstree({
+                'core': {
+                    'data': jsondata
+                }
+            });
+
+        });
+
+
+
+
+
+
+
+

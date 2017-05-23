@@ -1,0 +1,20 @@
+doctype html
+html
+    head
+        title= title
+
+        link(rel='stylesheet', href='/stylesheets/bootstrap.css')
+        link(rel='stylesheet', href='/stylesheets/stylelogin.css')
+
+        script(src='/javascripts/bootstrap.js')
+    body
+        form.form-signin(method='post',action='/mclovin')
+            h2.form-signin-heading
+            label.sr-only Username
+            input.form-control(name='username',type='text', placeholder='Username', required='', autofocus='')
+            label.sr-only Password
+            input.form-control(name='password',type='password', placeholder='Password', required='')
+            button.btn.btn-lg.btn-primary.btn-block(type='submit') Log in
+            br
+            a(href='/') Create An Account
+

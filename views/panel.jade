@@ -1,0 +1,31 @@
+extends layout
+
+block variables
+    - HOMEPAGE = true;
+
+block content
+    .row
+        .col-md-4
+            h2
+                i(class='glyphicon glyphicon-hdd')
+                | Administrador de procesos
+            p
+                | Muestra de forma tabulada todos los procesos que estan siendo ejecutados en el servidor, asi como un resumen de los procesos.
+                p
+                a.btn.btn-default(href='/procesos', role='button') View details »
+        .col-md-4
+            h2
+                i(class='glyphicon glyphicon-list-alt')
+                | Monitor de CPU
+            p
+                | Muestra el consumo del CPU del servidor en tiempo real.
+            p
+                a.btn.btn-default(href='/cpu', role='button') View details »
+        .col-md-4
+            h2
+                i(class='glyphicon glyphicon-cog')
+                | Monitor de RAM
+            p
+                | El monitor de memoria RAM muestra informacion del consumo de RAM del servidor.
+            p
+                a.btn.btn-default(href='/ram', role='button') View details »

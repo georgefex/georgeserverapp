@@ -1,0 +1,119 @@
+extends layout
+
+block content
+    br
+    br
+    br
+    h1
+        | Administrador de Procesos
+    table#final_table
+        thead
+            th PID
+            th Nombre
+            th Usuario
+            th RAM
+            th Estado
+    h1#p1
+    table#infoproc
+        tr
+            td      Total de procesos:
+            td#pd2
+        tr
+            td               En ejecucion:
+            td#pd3
+            td#yisus
+        tr
+            td              Suspendidos:
+            td#pd4
+        tr
+            td              Detenidos:
+            td#pd5
+        tr
+            td              Zombies:
+            td#pd6
+    button#boton.btn.btn-lg.btn-primary.btn-block(type='kill') kill
+
+    script(type='text/javascript').
+
+        var socket = io.connect('http://localhost:3001');
+        var table = $('#final_table').DataTable({
+            "scrollY": "550px",
+            "scrollCollapse": true,
+            "paging":         false,
+            "bInfo": false,
+            "columns": [
+                {"data": "PID"},
+                {"data": "Nombre"},
+                {"data": "Usuario"},
+                {"data": "RAM"},
+                {"data": "Estado"}
+            ]
+        });
+        $('#final_table tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+        $('#boton').click(function () {
+            var pid = table.row('.selected').data().PID;
+            table.row('.selected').remove().draw(false);
+            var cmd = pid;
+            socket.emit("matarproceso",cmd);
+        });
+
+        var numeros = [];
+
+        socket.on('pushprocesos', function (data) {
+            table.clear();
+
+           var  arrayobj= JSON.parse(data);
+            for (var i = 0; i < arrayobj.length; i = i + 1) {
+                var obj = arrayobj[i];
+                table.row.add({
+                    "PID": obj.PID,
+                    "Nombre": obj.Nombre,
+                    "Usuario": "george",
+                    "RAM": "0.2",
+                    "Estado": obj.state
+                }).draw();
+            }
+
+        });
+
+
+
+        socket.on('pushrunningprocess', function (data) {
+            numeros.push(data);
+            document.getElementById("pd3").innerHTML =  data;
+
+        });
+
+        socket.on('pushssleepingprocess', function (data) {
+            numeros.push(data);
+            document.getElementById("pd4").innerHTML =  data;
+        });
+
+        socket.on('pushstoppedprocess', function (data) {
+            numeros.push(data);
+            document.getElementById("pd5").innerHTML = data;
+        });
+
+        socket.on('pushzombieprocess', function (data) {
+            numeros.push(data);
+            document.getElementById("pd6").innerHTML = data;
+        });
+
+        socket.on('pushtotalprocesos', function (data) {
+            var numero = 0;
+            for (var i = 0; i < numeros.length; i++) {
+                numero = numero + parseInt(numeros[i]);
+            }
+            document.getElementById("pd2").innerHTML = numero;
+            numeros = [];
+        });
+
